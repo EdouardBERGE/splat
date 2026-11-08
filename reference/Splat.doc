@@ -1,0 +1,161 @@
+                              -=-=-=-=-=-
+                               SPLAT 1.0
+                             documentation
+                          -=-=-=-=-=-=-=-=-=-
+                      11/4/96 by Stephen Cantini
+
+INTRODUCTION
+-----------------------------
+What is splat? Splat is a file splitter with LOTS of features: it can be used
+for an easy task such as dividing a file in 3 parts with
+
+1> splat ram:foo 3 parts
+
+as well as for this:
+
+1> splat ram:ZZ to ram:foo 8 k search \tAnY\ntH?nG nocase r nocut dowild quick
+
+which means "read 8 kbytes of the file ram:zz, then countinue reading until
+you find (using case insensitive search) the string \tAnY\ntH?nG (where \t
+means tab, \n means line feed and ? means any char ("jolly" char)), then write
+all what you have read to the file ram:foo.0, without truncating the last
+line of text. Repeat this recursively until you reach the end of ram:zz, then
+output to the shell just the number of files created."
+
+Shocking, isn't it? ;-)
+
+
+REQUIREMENTS
+-----------------------------
+Splat requires OS 2.04+ to operate correctly, and at least 7 k of ram..;)
+
+
+LICENCE and DISCLAIMER
+-----------------------------
+Splat is freeware. This means that you can use it without paying anything to
+the author, and you are encouraged to spread it all over the world, as long
+as you include this doc file in the distribution (source file is optional).
+However, I'm NOT responsable for any loss of data or damage to your computer
+that splat may cause: use Splat at your OWN risk.
+(PS: Do not panic!! Splat has been tested for a long time and it never gave
+problems, so there SHOULDN'T be any bug.)
+
+
+DISTRIBUTION
+-----------------------------
+This archive contains:
+
+splat     - the executable
+splat.doc - this text
+splat.e   - splat source, written in E language
+
+
+INSTALLATION
+-----------------------------
+Just copy it to your C: directory. You can keep also this doc if you want, but
+once you read it one time, you probably won't need to do it any more, also
+because Splat uses the "extended help" dos feature: try to write in a shell
+"splat ?" and then answer another time with "?"...nice, isn't it?
+
+
+USAGE
+-----------------------------
+Splat is a shell-only utility. It's template is:
+
+splat FILE/A,S=SEARCH/K,SIZE/N,K/S,LINES/S,TO/K,R=RECURSIVE/S,QUIET/S,
+      BUF=BUFFER/K/N,PARTS/S,NOCUT/S,QUICK/S,NOCASE/S,DOWILD/S,MAX/K/N
+
+Explaination of each argument:
+
+o FILE/A
+  The file to be splitted. Wildcards ("#", "?") are not allowed yet.
+
+o S=SEARCH/K
+  The optional string to search for. It can also include this special codes:
+
+           "\t" = Tab (ASCII 9)
+           "\n" = Line Feed (ASCII 10)
+           "\\" = The "\" character itself
+           "\?" = The "?" character itself, for using with the DOWILD option.
+
+  Splat uses fast assembly search routines.
+
+o SIZE/N
+  The length of file to split at, in bytes.
+
+o K/S
+  This means that size is expressed in Kbytes.
+
+o LINES/S
+  Size is expressed in lines of text.
+  Splat uses a fast assembly routine to count lines.
+
+o TO/K
+  Optional destination directory/files. If it's just a directory name, then
+  the input file name will be used. Splat appends a ".n" extension for each
+  file it creates, with n going from 0 to 9999.
+
+o R=RECURSIVE/S
+  By default, splat cuts a file in two parts, at the specified point. By using
+  this switch, you tell splat to cut as more times as it can, till the end of
+  the input file. Ex:
+
+  1> splat ram:foo 8 k
+
+  Divide the file in two parts exactly after 8 kbytes.
+
+  1> splat ram:foo 8 k recursive
+
+  Divide the file in many "slices" of 8 kbytes each. (The last one will
+  probably be shorter)
+
+o QUIET/S
+  Do not output anything.
+
+o BUF=BUFFER/K/N
+  Splat allocates a speed-up I/O buffer. By default, this buffer is as big as
+  the input file for search-split and lines-split (to get the best searching
+  speed), and as big as the specified SIZE in the other cases.
+  You can override this by setting your preferred buffer size with this
+  keyword. Remember that it's expressed in Kbytes.
+  PS: If memory allocation fails splat will try to allocate an 8k buffer
+  before giving a "Not enough memory" error.
+
+o PARTS/S
+  This switch is used, together with SIZE, to divide the file in equal parts.
+  Ex: 1> splat ram:foo 3 parts
+
+o NOCUT/S
+  This switch prevents splat from truncating text lines when dividing text
+  files.
+
+o QUICK/S
+  Use this to make splat output ONLY the number of files created (useful for
+  redirection into an env variable, for use inside scripts).
+
+o NOCASE/S
+  This makes splat' search case INsensitive (default: case sensitive)
+
+o DOWILD/S
+  This allows you to use the "?" character in the search string as a "jolly"
+  character, exactly as the amigados char. Pratically it stands for "any
+  character".
+
+o MAX/K/N
+  With this keyword you can specify the maximum number of files that splat
+  can create.
+
+
+LAST WORDS
+-----------------------------
+Hope you like my work!!
+If you find any bug, or you think that splat doesn't have a particular
+feature (such as making coffee ;), please mail me at :
+
+                    E-Mail  :nevez@shock.nervous.com
+                             nevez@mbox.vol.it
+                    FidoNet :2:332/125.6
+                    AmigaNet:39:102/205.6
+
+                                                          BYE!!
+                                                Stephen Cantini AKA nevez
