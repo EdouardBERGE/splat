@@ -1,5 +1,6 @@
 # splat
 
+```
 Splat V1.0 (c) Stephen Cantini - portable C version
 
 FILE/A = The file to be splitted
@@ -17,3 +18,4 @@ QUICK/S = Output JUST the number of files created.
 NOCASE/S = Make string search case insensitive.
 DOWILD/S = Allow jolly character "?" in search string.
 MAX/K/N = Max number of files to create.
+```
