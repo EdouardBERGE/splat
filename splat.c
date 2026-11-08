@@ -398,6 +398,7 @@ int main(int argc, char **argv)
     u64 written = 0;        /* bytes written so far */
     u64 linesdone = 0;      /* newlines consumed so far */
     u64 counter = 0;        /* units left in the current size phase */
+    u64 nparts = 0;         /* PARTS: number of parts requested */
     unsigned long partidx = 0, maxfiles = 0;
     int bytemode, linemode, hassearch, recursive, nocut, nocase, quiet, quick, parts;
     int phase = PH_DONE;
@@ -506,6 +507,13 @@ int main(int argc, char **argv)
             fprintf(stderr, "SIZE argument is bigger than file size.\n");
             goto cleanup;
         }
+        /* PARTS: fixed slice size = ceil(total / parts), then plain
+         * recursive split. May give fewer files than requested (e.g. 5
+         * parts of 7 bytes -> 2,2,2,1): slices are never rebalanced. */
+        if (parts) {
+            nparts = size;
+            size = (total + nparts - 1) / nparts;
+        }
         rewind(in);
     }
 
@@ -523,18 +531,11 @@ int main(int argc, char **argv)
 
                 if ((!recursive && partidx >= 1) ||
                     (maxfiles && partidx + 1 >= maxfiles) ||
-                    (parts && partidx + 1 >= (unsigned long)size)) {
+                    (parts && partidx + 1 >= nparts)) {
                     phase = PH_REST;
                 } else if (arg_set[A_SIZE]) {
                     phase = PH_UNITS;
-                    if (parts) {
-                        u64 left = (u64)(size - partidx);
-                        u64 remain = total - (linemode ? linesdone : written);
-                        counter = (remain + left - 1) / left;
-                        if (counter == 0) counter = 1;
-                    } else {
-                        counter = size;
-                    }
+                    counter = size;
                 } else {
                     phase = PH_SEARCH;
                     matcher_reset();

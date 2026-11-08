@@ -45,7 +45,7 @@ struct testcase {
  * double quotes: this is interpreted identically by sh and cmd.exe. */
 static const struct testcase cases[] = {
     /* --- binary file, byte sizes --- */
-    { "tsp_bin", "3 parts", NULL, "3 files created.\n", "33334,33333*2" },
+    { "tsp_bin", "3 parts", NULL, "3 files created.\n", "33334*2,33332" },
     { "tsp_bin", "8 k", NULL, NULL, "8192,91808" },
     { "tsp_bin", "8 K R", NULL, NULL, "8192*12,1696" },
     { "tsp_bin", "8 k recursive max 4", NULL, NULL, "8192*3,75424" },
@@ -61,7 +61,7 @@ static const struct testcase cases[] = {
     { "tsp_txt", "100 lines r", NULL, "10 files created.\n", "292,400*8,401" },
     { "tsp_txt", "7 parts lines", NULL, NULL, "464,572*5,569" },
     { "tsp_txt", "1000 r nocut", NULL, NULL, "1000*3,893" },
-    { "tsp_txt", "4 parts nocut", NULL, NULL, "976*2,972,969" },
+    { "tsp_txt", "4 parts nocut", NULL, NULL, "976*3,965" },
     { "tsp_txt", "S \"\\n50\\n\"", NULL, NULL, "141,3752" },
     { "tsp_txt", "SEARCH=99 r", NULL, NULL, "287,400*8,363,4*9,7" },
     { "tsp_txt", "s 99 r nocut", NULL, NULL, "288,400*8,364,4*9,5" },
@@ -74,6 +74,7 @@ static const struct testcase cases[] = {
     /* --- search details --- */
     { "tsp_case", "S world nocase r", NULL, NULL, "11,10,14" },
     { "tsp_case", "S world r", NULL, NULL, "35" },
+    { "tsp_case", "20 parts", NULL, "18 files created.\n", "2*17,1" },  /* slice size kept, fewer files */
     { "tsp_case", "S WORLD r nocut", NULL, NULL, "26,9" },
     { "tsp_aab", "S aab r", NULL, NULL, "4,6" },                  /* backtracking */
     { "tsp_tab", "1 search \"\\t?1\\n\" nocase r nocut dowild", NULL, NULL, "5,7,2" },
